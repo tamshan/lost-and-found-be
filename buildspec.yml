@@ -1,29 +1,23 @@
-# Do not change version. This is the version of aws buildspec, not the version of your buldspec file.
 version: 0.2
 
 phases:
-  install:
-    runtime-versions:
-      nodejs: 14  
   pre_build:
     commands:
-      - echo Installing source NPM dependencies...
-      - npm install
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 441184683115.dkr.ecr.ap-southeast-1.amazonaws.com
   build:
     commands:
       - echo Build started on `date`
-      - echo Compiling the Node.js code
+      - echo Building the Docker image...          
+      - docker build -t landfbe-doc-rep:latest .
+      - docker tag landfbe-doc-rep:latest 441184683115.dkr.ecr.ap-southeast-1.amazonaws.com/landfbe-doc-rep:latest      
   post_build:
     commands:
       - echo Build completed on `date`
-# Include only the files required for your application to run.
-# Do not use recursively include artifacts from node_modules directory as it will include unnecessary packages 
-# used only for building and testing.
-# ExpressJS apps will need other artifact directories included (bin/*, public/*, routes/*, views/* etc).
-artifacts:
-  files:
-    - app.js
-    - index.html
-    - package.json
-    - node_modules/async/*
-    - node_modules/lodash/*
+      - echo Pushing the Docker image...
+      - docker push 441184683115.dkr.ecr.ap-southeast-1.amazonaws.com/landfbe-doc-rep:latest
+  artifacts :
+     files:
+       - "**/*"
+       name: lost-and-found-be-artifacts
+  
