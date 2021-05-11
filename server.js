@@ -61,6 +61,10 @@ app.use(
 // writes every recorder route
 openApi.save('./swagger.yml')
 
+app.use('/health', function (req, res, next) {
+  res.sendStatus(200)
+})
+
 app.listen(PORT, function () {
   console.log(`Server listening on port ${PORT}.`)
 })
