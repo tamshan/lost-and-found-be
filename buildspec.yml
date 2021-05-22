@@ -6,11 +6,12 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin 441184683115.dkr.ecr.ap-southeast-1.amazonaws.com
   build:
-    commands:
+      commands:
       - echo Build started on `date`
       - echo Building the Docker image...          
       - docker build -t landfbe-doc-rep:latest .
-      - docker tag landfbe-doc-rep:latest 441184683115.dkr.ecr.ap-southeast-1.amazonaws.com/landfbe-doc-rep:latest      
+      - docker tag landfbe-doc-rep:latest 441184683115.dkr.ecr.ap-southeast-1.amazonaws.com/landfbe-doc-rep:latest   
+      -    
   post_build:
     commands:
       - echo Build completed on `date`
